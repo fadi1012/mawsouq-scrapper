@@ -7,7 +7,7 @@ import time
 from XlsxWriter import xlsxwriter
 
 
-def main(keyword="مهندس عمار", x_range=100):
+def main(keyword, x_range):
     chrome_driver_filename = 'chromedriver'
     chrome_driver_dir = os.path.expanduser("~") + '/bin/'
     chrome_driver_path = chrome_driver_dir + chrome_driver_filename

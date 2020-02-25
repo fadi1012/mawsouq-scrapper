@@ -1,0 +1,37 @@
+#!/bin/sh
+
+
+get_script_folder() {
+  relative_path=$(dirname $0)
+  # requires python, but supports both mac and linux
+  abs_path=$(python -c 'import os,sys ; print(os.path.realpath(sys.argv[1]))' $relative_path)
+  echo ${abs_path}
+}
+
+project_root=$(get_script_folder)
+pushd ${project_root}
+
+
+
+
+if [ "x$VIRTUAL_ENV" == "x" ];
+then
+    echo "You need to be in the buzzdev venv - Running source buzz-activate"
+    source ${project_root}/mawsouq-dev/bin/activate
+fi
+
+
+pushd ${project_root}
+python ${project_root}/scrape_haraj.py
+
+
+result=$?
+echo "result value -> ${result}"
+popd >/dev/null
+
+if [ result = 0 ]
+then
+    exit 0
+else
+    exit $result
+fi
