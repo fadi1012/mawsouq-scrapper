@@ -47,7 +47,7 @@ function get_docker_compose(){
 
 
 function install_docker_compose(){
-   docker-compose -f ${project_root}/${FILE_NAME} --version || get_docker_compose
+   docker-compose --version || get_docker_compose
 }
 
 print_to_console "installing docker compose " install_docker_compose
