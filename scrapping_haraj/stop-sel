@@ -1,0 +1,46 @@
+#!/bin/bash
+
+function print_to_console() {
+  echo "==========================================================="
+  echo "===== $1 ====="
+  echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+  $2
+  echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+  echo "------------------------ DONE! ----------------------------"
+  echo "==========================================================="
+  echo ""
+}
+
+
+get_script_folder() {
+  relative_path=$(dirname $0)
+  # requires python, but supports both mac and linux
+  abs_path=$(python -c 'import os,sys ; print(os.path.realpath(sys.argv[1]))' $relative_path)
+  echo ${abs_path}
+}
+
+project_root=$(get_script_folder)/../
+
+function remove_docker_orphans(){
+ echo "Stopping the grid and cleaning containers..."
+ docker-compose -f ${project_root}/"docker-compose-non-headless.yml" down --remove-orphans
+ docker-compose -f ${project_root}/"docker-compose-headless.yml" down --remove-orphans
+ docker network rm $(docker network ls -q)
+}
+
+function clear_previous_containers() {
+    docker rm $(docker ps --filter=status=exited --filter=status=created -q)
+}
+
+function docker_ps_all() {
+    docker ps -a
+}
+
+print_to_console "docker ps -a" docker_ps_all
+print_to_console "docker rm exited and created" clear_previous_containers
+print_to_console "removing docker orphans" remove_docker_orphans
+
+set -e
+
+#TODO check if sel grid is healthy and up
+exit 500 #exit on failure from resource check

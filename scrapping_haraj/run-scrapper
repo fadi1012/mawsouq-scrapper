@@ -16,6 +16,7 @@ ${project_root}/start-selenium
 
 python ${project_root}/scrape_haraj.py
 
+${project_root}/stop-sel
 
 result=$?
 echo "result value -> ${result}"
