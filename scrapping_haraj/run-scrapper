@@ -1,5 +1,4 @@
-#!/bin/sh
-
+#!/bin/bash
 
 get_script_folder() {
   relative_path=$(dirname $0)
@@ -8,17 +7,11 @@ get_script_folder() {
   echo ${abs_path}
 }
 
+
 project_root=$(get_script_folder)
 pushd ${project_root}
-
-
-
-
-if [ "x$VIRTUAL_ENV" == "x" ];
-then
-    echo "You need to be in the buzzdev venv - Running source buzz-activate"
-    source ${project_root}/mawsouq-dev/bin/activate
-fi
+echo "sourcing"
+source ${project_root}/mawsouq-dev/bin/activate
 
 
 pushd ${project_root}
@@ -27,7 +20,6 @@ python ${project_root}/scrape_haraj.py
 
 result=$?
 echo "result value -> ${result}"
-popd >/dev/null
 
 if [ result = 0 ]
 then
