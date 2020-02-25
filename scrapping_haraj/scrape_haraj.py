@@ -8,13 +8,18 @@ from XlsxWriter import xlsxwriter
 
 
 def main(keyword, x_range):
-    chrome_driver_filename = 'chromedriver'
-    chrome_driver_dir = os.path.expanduser("~") + '/bin/'
-    chrome_driver_path = chrome_driver_dir + chrome_driver_filename
     options = Options()
     options.add_argument('--start-maximized')
+    options.add_argument("--headless")  # Runs Chrome in headless mode.
+    options.add_argument('--no-sandbox')  # Bypass OS security model
+    options.add_argument('--ignore-certificate-errors')
+    options.add_argument('--disable-setuid-sandbox')
+    options.add_experimental_option('w3c', False)
+    options.add_argument("--kiosk")  # maximize headless chrome in linux machines
     capabilities = options.to_capabilities()
-    web_driver = webdriver.Chrome(executable_path=chrome_driver_path, desired_capabilities=capabilities)
+    capabilities['loggingPrefs'] = {'browser': 'ALL'}
+    capabilities["acceptInsecureCerts"] = True
+    web_driver = webdriver.Remote(desired_capabilities=capabilities)
     web_driver.get("http://haraj.com/")
     search_bar = web_driver.find_element_by_id("searchBoxContent")
     search_bar.find_element_by_tag_name("input").send_keys(keyword)

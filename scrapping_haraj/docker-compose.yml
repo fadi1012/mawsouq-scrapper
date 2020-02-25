@@ -1,0 +1,33 @@
+version: '3'
+services:
+  chrome:
+    image: selenium/node-chrome:3.141.59-uranium
+    volumes:
+      - /dev/shm:/dev/shm
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - selenium-hub-headless
+    environment:
+      HUB_HOST: selenium-hub-headless
+      HUB_PORT : 4444
+      NODE_MAX_INSTANCES: 1
+      NODE_MAX_SESSION: 1
+      SEL_BROWSER_TIMEOUT_SECS : 900
+      WAIT_FOR_AVAILABLE_NODES : "True"
+      NEW_SESSION_WAIT_TIMEOUT : 400000
+      CHECK_CONTAINERS_INTERVAL : 5000
+      START_XVFB: "False"
+      SCREEN_WIDTH: 2560
+      SCREEN_HEIGHT: 2000
+
+
+  selenium-hub-headless:
+    image: selenium/hub:3.141.59-uranium
+    container_name: selenium-hub-headless
+    ports:
+      - "4444:4444"
+    environment:
+      GRID_BROWSER_TIMEOUT: 10000
+      GRID_TIMEOUT: 9000
+      GRID_NEW_SESSION_WAIT_TIMEOUT: 30000
+

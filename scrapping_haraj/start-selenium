@@ -1,0 +1,63 @@
+#!/bin/bash
+
+
+function print_to_console() {
+  echo "==========================================================="
+  echo "===== $1 ====="
+  echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+  $2
+  echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+  echo "------------------------ DONE! ----------------------------"
+  echo "==========================================================="
+  echo ""
+}
+
+
+get_script_folder() {
+  relative_path=$(dirname $0)
+  # requires python, but supports both mac and linux
+  abs_path=$(python -c 'import os,sys ; print(os.path.realpath(sys.argv[1]))' $relative_path)
+  echo ${abs_path}
+}
+
+project_root=$(get_script_folder)
+
+
+# Run headless Selenium-Grid
+function run_headless_selenium_docker_in_background() {
+   docker-compose  up --scale chrome=1 -d
+   sleep 15s
+}
+
+
+
+function docker_ps_all() {
+    docker ps -a
+}
+
+function docker_images() {
+    docker images
+}
+
+
+function get_docker_compose(){
+    echo "123456" | sudo -S curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    echo "123456" | sudo -S chmod +x /usr/local/bin/docker-compose
+}
+
+
+function install_docker_compose(){
+   docker-compose -f ${project_root}/${FILE_NAME} --version || get_docker_compose
+}
+
+print_to_console "installing docker compose " install_docker_compose
+print_to_console "docker ps -a" docker_ps_all
+print_to_console "docker images" docker_images
+print_to_console "Run Selenium Grid in background" run_headless_selenium_docker_in_background
+
+print_to_console "Docker compose"
+print_to_console "Scaling"
+set -e
+
+#TODO check if sel grid is healthy and up
+exit 500 #exit on failure from resource check

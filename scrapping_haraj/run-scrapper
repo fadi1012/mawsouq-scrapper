@@ -12,9 +12,8 @@ project_root=$(get_script_folder)
 pushd ${project_root}
 echo "sourcing"
 source ${project_root}/mawsouq-dev/bin/activate
+${project_root}/start-selenium
 
-
-pushd ${project_root}
 python ${project_root}/scrape_haraj.py
 
 
